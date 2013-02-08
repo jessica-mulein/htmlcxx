@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "htmlcxx", "htmlcxx.vcxproj", "{19E064CF-3B8E-475C-AB0C-CD90A96E7E0C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug_DLL_md|Win32 = Debug_DLL_md|Win32
+		Debug_DLL_mt|Win32 = Debug_DLL_mt|Win32
+		Debug_LIB_md|Win32 = Debug_LIB_md|Win32
+		Debug_LIB_mt|Win32 = Debug_LIB_mt|Win32
+		Release_DLL_md|Win32 = Release_DLL_md|Win32
+		Release_DLL_mt|Win32 = Release_DLL_mt|Win32
+		Release_LIB_md|Win32 = Release_LIB_md|Win32
+		Release_LIB_mt|Win32 = Release_LIB_mt|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{19E064CF-3B8E-475C-AB0C-CD90A96E7E0C}.Debug_DLL_md|Win32.ActiveCfg = Debug_DLL_md|Win32
+		{19E064CF-3B8E-475C-AB0C-CD90A96E7E0C}.Debug_DLL_md|Win32.Build.0 = Debug_DLL_md|Win32
+		{19E064CF-3B8E-475C-AB0C-CD90A96E7E0C}.Debug_DLL_mt|Win32.ActiveCfg = Debug_DLL_mt|Win32
+		{19E064CF-3B8E-475C-AB0C-CD90A96E7E0C}.Debug_DLL_mt|Win32.Build.0 = Debug_DLL_mt|Win32
+		{19E064CF-3B8E-475C-AB0C-CD90A96E7E0C}.Debug_LIB_md|Win32.ActiveCfg = Debug_LIB_md|Win32
+		{19E064CF-3B8E-475C-AB0C-CD90A96E7E0C}.Debug_LIB_md|Win32.Build.0 = Debug_LIB_md|Win32
+		{19E064CF-3B8E-475C-AB0C-CD90A96E7E0C}.Debug_LIB_mt|Win32.ActiveCfg = Debug_LIB_mt|Win32
+		{19E064CF-3B8E-475C-AB0C-CD90A96E7E0C}.Debug_LIB_mt|Win32.Build.0 = Debug_LIB_mt|Win32
+		{19E064CF-3B8E-475C-AB0C-CD90A96E7E0C}.Release_DLL_md|Win32.ActiveCfg = Release_DLL_md|Win32
+		{19E064CF-3B8E-475C-AB0C-CD90A96E7E0C}.Release_DLL_md|Win32.Build.0 = Release_DLL_md|Win32
+		{19E064CF-3B8E-475C-AB0C-CD90A96E7E0C}.Release_DLL_mt|Win32.ActiveCfg = Release_DLL_mt|Win32
+		{19E064CF-3B8E-475C-AB0C-CD90A96E7E0C}.Release_DLL_mt|Win32.Build.0 = Release_DLL_mt|Win32
+		{19E064CF-3B8E-475C-AB0C-CD90A96E7E0C}.Release_LIB_md|Win32.ActiveCfg = Release_LIB_md|Win32
+		{19E064CF-3B8E-475C-AB0C-CD90A96E7E0C}.Release_LIB_md|Win32.Build.0 = Release_LIB_md|Win32
+		{19E064CF-3B8E-475C-AB0C-CD90A96E7E0C}.Release_LIB_mt|Win32.ActiveCfg = Release_LIB_mt|Win32
+		{19E064CF-3B8E-475C-AB0C-CD90A96E7E0C}.Release_LIB_mt|Win32.Build.0 = Release_LIB_mt|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

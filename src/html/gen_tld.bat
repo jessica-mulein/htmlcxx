@@ -1,0 +1,1 @@
+perl gen_tld.pl < tld.list > tld.h
