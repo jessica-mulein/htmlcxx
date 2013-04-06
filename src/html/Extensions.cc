@@ -21,6 +21,7 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #include <cstring>
+
 #include "htmlcxx/html/Extensions.h"
 
 using namespace std;

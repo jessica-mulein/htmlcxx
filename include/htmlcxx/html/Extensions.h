@@ -25,8 +25,8 @@
 
 #include <set>
 #include <string>
-#include "../impl/export_api.h"
-#include "../impl/ci_string.h"
+#include "../details/export_api.h"
+#include "../details/ci_string.h"
 
 namespace htmlcxx
 {

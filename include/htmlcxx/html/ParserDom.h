@@ -25,7 +25,7 @@
 
 #include "ParserSax.h"
 #include "tree.h"
-#include "../impl/export_api.h"
+#include "../details/export_api.h"
 
 namespace htmlcxx
 {

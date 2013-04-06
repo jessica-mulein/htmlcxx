@@ -24,8 +24,9 @@
 #include <cassert>
 
 #include "htmlcxx/html/Uri.h"
-#include "htmlcxx/impl/fix_win_cstring.h"
-#include "htmlcxx/impl/debug.h"
+
+#include "htmlcxx/details/fix_win_cstring.h"
+#include "htmlcxx/details/debug.h"
 #include "tld.h"
 
 using namespace std;

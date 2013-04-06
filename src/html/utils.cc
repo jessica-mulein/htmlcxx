@@ -27,7 +27,8 @@
 
 #include "htmlcxx/html/Uri.h"
 #include "htmlcxx/html/utils.h"
-#include "htmlcxx/impl/fix_char.h"
+
+#include "htmlcxx/details/fix_char.h"
 
 using namespace std;
 

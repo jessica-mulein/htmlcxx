@@ -15,7 +15,7 @@
     <Filter Include="Source Files\html">
       <UniqueIdentifier>{8533d719-2e60-4527-9124-70baa0c02347}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\impl">
+    <Filter Include="Header Files\details">
       <UniqueIdentifier>{7de3fbde-2076-4698-aec5-fe48f8f9da31}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -40,18 +40,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\htmlcxx\impl\ci_string.h">
-      <Filter>Header Files\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\htmlcxx\impl\debug.h">
-      <Filter>Header Files\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\htmlcxx\impl\fix_char.h">
-      <Filter>Header Files\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\htmlcxx\impl\fix_win_cstring.h">
-      <Filter>Header Files\impl</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\htmlcxx\html\Extensions.h">
       <Filter>Header Files\html</Filter>
     </ClInclude>
@@ -73,11 +61,23 @@
     <ClInclude Include="..\..\include\htmlcxx\html\utils.h">
       <Filter>Header Files\html</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\htmlcxx\impl\export_api.h">
-      <Filter>Header Files\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\Libs\htmlcxx\include\htmlcxx\html\tree.h">
+    <ClInclude Include="..\..\include\htmlcxx\html\tree.h">
       <Filter>Header Files\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\htmlcxx\details\ci_string.h">
+      <Filter>Header Files\details</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\htmlcxx\details\debug.h">
+      <Filter>Header Files\details</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\htmlcxx\details\export_api.h">
+      <Filter>Header Files\details</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\htmlcxx\details\fix_char.h">
+      <Filter>Header Files\details</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\htmlcxx\details\fix_win_cstring.h">
+      <Filter>Header Files\details</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

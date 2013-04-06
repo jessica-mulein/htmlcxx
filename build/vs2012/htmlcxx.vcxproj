@@ -43,19 +43,19 @@
     <ClCompile Include="..\..\src\html\utils.cc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\Libs\htmlcxx\include\htmlcxx\html\tree.h" />
+    <ClInclude Include="..\..\include\htmlcxx\details\ci_string.h" />
+    <ClInclude Include="..\..\include\htmlcxx\details\debug.h" />
+    <ClInclude Include="..\..\include\htmlcxx\details\export_api.h" />
+    <ClInclude Include="..\..\include\htmlcxx\details\fix_char.h" />
+    <ClInclude Include="..\..\include\htmlcxx\details\fix_win_cstring.h" />
     <ClInclude Include="..\..\include\htmlcxx\html\Extensions.h" />
     <ClInclude Include="..\..\include\htmlcxx\html\Node.h" />
     <ClInclude Include="..\..\include\htmlcxx\html\ParserDom.h" />
     <ClInclude Include="..\..\include\htmlcxx\html\ParserSax.h" />
     <ClInclude Include="..\..\include\htmlcxx\html\ParserSax_.h" />
+    <ClInclude Include="..\..\include\htmlcxx\html\tree.h" />
     <ClInclude Include="..\..\include\htmlcxx\html\Uri.h" />
     <ClInclude Include="..\..\include\htmlcxx\html\utils.h" />
-    <ClInclude Include="..\..\include\htmlcxx\impl\ci_string.h" />
-    <ClInclude Include="..\..\include\htmlcxx\impl\debug.h" />
-    <ClInclude Include="..\..\include\htmlcxx\impl\export_api.h" />
-    <ClInclude Include="..\..\include\htmlcxx\impl\fix_char.h" />
-    <ClInclude Include="..\..\include\htmlcxx\impl\fix_win_cstring.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{19E064CF-3B8E-475C-AB0C-CD90A96E7E0C}</ProjectGuid>
@@ -66,46 +66,54 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_LIB_mt|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DLL_mt|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_LIB_md|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DLL_md|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LIB_mt|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_DLL_mt|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LIB_md|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_DLL_md|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -277,6 +285,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\include\</AdditionalIncludeDirectories>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

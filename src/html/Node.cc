@@ -25,8 +25,9 @@
 #include <algorithm>
 
 #include "htmlcxx/html/Node.h"
-#include "htmlcxx/impl/fix_win_cstring.h"
-#include "htmlcxx/impl/fix_char.h"
+
+#include "htmlcxx/details/fix_win_cstring.h"
+#include "htmlcxx/details/fix_char.h"
 
 using namespace std;
 using namespace htmlcxx;

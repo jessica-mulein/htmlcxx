@@ -26,7 +26,7 @@
 #include <string>
 
 #include "Node.h"
-#include "../impl/export_api.h"
+#include "../details/export_api.h"
 
 namespace htmlcxx
 {

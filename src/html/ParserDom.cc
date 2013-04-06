@@ -24,8 +24,9 @@
 #include <vector>
 
 #include "htmlcxx/html/ParserDom.h"
-#include "htmlcxx/impl/fix_win_cstring.h"
-#include "htmlcxx/impl/debug.h"
+
+#include "htmlcxx/details/fix_win_cstring.h"
+#include "htmlcxx/details/debug.h"
 
 #define TAG_NAME_MAX 10
 

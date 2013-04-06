@@ -22,8 +22,8 @@
 
 #include <cctype>
 #include <cstring>
-#include "../impl/fix_win_cstring.h"
-#include "../impl/fix_char.h"
+#include "../details/fix_win_cstring.h"
+#include "../details/fix_char.h"
 #if !defined(WIN32) || defined(__MINGW32__)
 #include <strings.h>
 #endif

@@ -26,7 +26,7 @@
 #include <string>
 #include <climits>
 #include <stdexcept>
-#include "../impl/export_api.h"
+#include "../details/export_api.h"
 
 namespace htmlcxx
 {

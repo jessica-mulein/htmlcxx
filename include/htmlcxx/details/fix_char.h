@@ -3,7 +3,7 @@
  *  Date:    2012/12/12
  *  Author:  Ruzzz ruzzzua[]gmail.com
  */
- 
+
 #ifndef __FIX_CHAR_H__
 #define __FIX_CHAR_H__
 
@@ -11,11 +11,11 @@
 
 inline int is_ascii_space(unsigned char ch) {  // unsigned char !!!
 	// TODO Read RFC
-	//return isspace(ch);
+	return isspace(ch);
 	//return ch <= ' ';
 
 	// locale independent
-	return '\t' == ch || '\f' == ch ||  '\n' == ch || '\r' == ch || '\v' == ch || ' ' == ch;
-} 
+	//return '\t' == ch || '\f' == ch ||  '\n' == ch || '\r' == ch || '\v' == ch || ' ' == ch;
+}
 
 #endif
