@@ -12,7 +12,7 @@ Changes based on [github.com/boazy/htmlcxx](https://github.com/boazy/htmlcxx)
 
 - New folder structure:
     - include - for exported headers;
-    - build - platform dependent scripts and projects for builging;
+    - build - platform dependent scripts and projects for building;
     - bin - for build shared libraries;
     - lib - for build static libraries;
 - Renamed files: ParserSax.tcc to ParserSax\_.h, wincstring.h to fix\_win\_cstring.h;
