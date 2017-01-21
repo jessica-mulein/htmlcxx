@@ -151,7 +151,8 @@ $RECYCLE.BIN/
 *.plog
 
 # MY
-lib
-bin
-Debug_*
-Release_*
+*.vc.db
+lib*/
+bin*/
+Debug_*/
+Release_*/

@@ -272,7 +272,7 @@ static unsigned int tldOffset(const char *domain)
 {
     const char *end = domain + strlen(domain);
     for (unsigned int i = 0; i < 264; ++i) {
-        unsigned int len = strlen(tld[i]);
+        unsigned int len = (unsigned int)strlen(tld[i]);
         if (strcasecmp(end - len, tld[i]) == 0) {
             return len;
         }

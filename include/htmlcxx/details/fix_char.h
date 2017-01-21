@@ -1,7 +1,7 @@
 /*
  *  Version: 1.0
  *  Date:    2012/12/12
- *  Author:  Ruzzz ruzzzua[]gmail.com
+ *  Author:  ruzzzua[]gmail.com
  */
 
 #ifndef __FIX_CHAR_H__

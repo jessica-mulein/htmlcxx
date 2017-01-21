@@ -33,7 +33,7 @@
 using namespace std;
 using namespace htmlcxx; 
 using namespace HTML; 
-//using namespace kp; 
+using namespace tree_hh;
 
 const tree<HTML::Node>& ParserDom::parseTree(const std::string &html)
 {
@@ -144,6 +144,7 @@ void ParserDom::foundTag(Node node, bool isEnd)
 	}
 }
 
+#ifdef DEBUG
 ostream &HTML::operator<<(ostream &stream, const tree<HTML::Node> &tr) 
 {
 
@@ -168,3 +169,4 @@ ostream &HTML::operator<<(ostream &stream, const tree<HTML::Node> &tr)
 	stream << "-----" << endl;
 	return stream;
 }
+#endif

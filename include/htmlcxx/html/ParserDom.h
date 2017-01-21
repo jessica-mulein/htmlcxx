@@ -37,8 +37,8 @@ namespace htmlcxx
 				ParserDom() {}
 				~ParserDom() {}
 
-				const tree<Node> &parseTree(const std::string &html);
-				const tree<Node> &getTree()
+				const tree_hh::tree<Node> &parseTree(const std::string &html);
+				const tree_hh::tree<Node> &getTree()
 				{ return mHtmlTree; }
 
 			protected:
@@ -50,11 +50,12 @@ namespace htmlcxx
 
 				virtual void endParsing();
 				
-				tree<Node> mHtmlTree;
-				tree<Node>::iterator mCurrentState;
+                tree_hh::tree<Node> mHtmlTree;
+                tree_hh::tree<Node>::iterator mCurrentState;
 		};
-
+#ifdef DEBUG
 		HTMLCXX_API std::ostream &operator<<(std::ostream &stream, const tree<HTML::Node> &tr);
+#endif
 	} //namespace HTML
 } //namespace htmlcxx
 

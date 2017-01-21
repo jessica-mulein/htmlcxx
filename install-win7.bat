@@ -1,3 +1,0 @@
-set CURRENT_PATH="%~dp0"
-setx HTMLCXX %CURRENT_PATH%include
-setx HTMLCXX_LIB %CURRENT_PATH%lib

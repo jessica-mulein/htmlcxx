@@ -37,7 +37,7 @@
 #include <algorithm>
 #include <cstddef>
 
-namespace htmlcxx
+namespace tree_hh
 {
 
 /// A node in the tree, combining links to other nodes as well as the actual data.
@@ -2781,7 +2781,7 @@ typename tree<T, tree_node_allocator>::leaf_iterator& tree<T, tree_node_allocato
    return (*this);
    }
 
-}  // namespace htmlcxx
+}  // namespace tree_hh
 
 #endif  // tree_hh_
 

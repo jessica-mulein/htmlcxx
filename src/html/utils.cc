@@ -31,6 +31,7 @@
 #include "htmlcxx/details/fix_char.h"
 
 using namespace std;
+using namespace tree_hh;
 
 namespace htmlcxx {
 	namespace HTML {
