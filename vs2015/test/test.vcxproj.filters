@@ -23,7 +23,7 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\htmlcxx2\test.cpp">
+    <ClCompile Include="..\..\test\test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

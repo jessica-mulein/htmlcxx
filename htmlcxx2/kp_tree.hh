@@ -104,6 +104,8 @@ class tree {
 
                 T&             operator*() const;
                 T*             operator->() const;
+                bool           operator!() const;
+                               operator bool() const;
 
                 /// When called, the next increment/decrement skips children of this node.
                 void         skip_children();
@@ -1918,6 +1920,18 @@ T* tree<T, tree_node_allocator>::iterator_base::operator->() const
     {
     return &(node->data);
     }
+
+template <class T, class tree_node_allocator>
+bool tree<T, tree_node_allocator>::iterator_base::operator!() const
+{
+    return node == nullptr;
+}
+
+template <class T, class tree_node_allocator>
+tree<T, tree_node_allocator>::iterator_base::operator bool() const
+{
+    return node != nullptr;
+}
 
 template <class T, class tree_node_allocator>
 bool tree<T, tree_node_allocator>::post_order_iterator::operator!=(const post_order_iterator& other) const

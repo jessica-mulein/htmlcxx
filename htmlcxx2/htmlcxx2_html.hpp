@@ -23,11 +23,11 @@ namespace detail {
 
     const char LITERAL_MODE_ELEM[][11] =
     {
-        "\x06" "script" "\0\0\0",
-        "\x05" "style"  "\0\0\0\0",
-        "\x03" "xmp"    "\0\0\0\0\0\0",
-        "\x09" "plaintext",
-        "\x08" "textarea" "\0"
+        "\x06""script",
+        "\x05""style",
+        "\x03""xmp",
+        "\x09""plaintext",
+        "\x08""textarea"
     };
 
     template <typename It>
@@ -66,25 +66,61 @@ namespace detail {
             return 1;
     }
 
+    template <typename T>
+    T toLower(const T &s)
+    {
+        T ret;
+        std::transform(s.begin(), s.end(),
+                std::back_insert_iterator<std::string>(ret), ::tolower);
+        return ret;
+    }
+
 } // detail
 
 //
 // Node
 //
 
+class ParserSax;
+class ParserDom;
+
 class Node
 {
 public:
     enum Kind
     {
+        NODE_END,
         NODE_ROOT,
         NODE_TAG,
         NODE_COMMENT,
         NODE_TEXT
     };
 
-    Node() {}
-    ~Node() {}
+    Node() :
+        tagName_(),
+        text_(),
+        closingText_(),
+        offset_(0),
+        length_(0),
+        kind_(NODE_END),
+        attributeKeys_(),
+        attributeValues_() { }
+
+    Node(const std::string &tagName,
+            const std::string &text,
+            const std::string &closingText,
+            size_t offset,
+            size_t length,
+            Kind kind) :
+        tagName_(detail::toLower(tagName)),
+        text_(text),
+        closingText_(detail::toLower(closingText)),
+        offset_(offset),
+        length_(length),
+        kind_(kind),
+        attributeKeys_(),
+        attributeValues_() { }
+    ~Node() { }
 
     const std::string& tagName() const     { return tagName_; }
     const std::string& text() const        { return text_; }
@@ -92,25 +128,25 @@ public:
     size_t offset() const                  { return offset_; }
     size_t length() const                  { return length_; }
     Kind kind() const                      { return kind_; }
+    bool isEnd() const                     { return kind_ == NODE_END; }
     bool isRoot() const                    { return kind_ == NODE_ROOT; }
     bool isTag() const                     { return kind_ == NODE_TAG; }
     bool isComment() const                 { return kind_ == NODE_COMMENT; }
     bool isText() const                    { return kind_ == NODE_TEXT; }
 
-    void setTagName(const std::string& value)     { tagName_ = value; }
+    // TODO:
+    /*void setTagName(const std::string& value)     { tagName_ = value; }
     void setText(const std::string &value)        { text_ = value; }
     void setClosingText(const std::string &value) { closingText_ = value; }
     void setOffset(size_t value)                  { offset_ = value; }
     void setLength(size_t value)                  { length_ = value; }
-    void setKind(const Kind &value)               { kind_ = value; }
-    void setKindRoot()                            { kind_ = NODE_ROOT; }
     void setKindTag()                             { kind_ = NODE_TAG; }
     void setKindComment()                         { kind_ = NODE_COMMENT; }
-    void setKindText()                            { kind_ = NODE_TEXT; }
+    void setKindText()                            { kind_ = NODE_TEXT; }*/
 
-    size_t contentOffset() const                       { return offset_ + text_.length(); }
-    size_t contentLength() const                       { return length_ - text_.length() - closingText_.length(); }
-    std::string content(const std::string &htmlSource) const { return htmlSource.substr(contentOffset(), contentLength()); }
+    size_t contentOffset() const;
+    size_t contentLength() const;
+    std::string content(const std::string &htmlSource) const;
 
     const std::vector<std::string>& attributeKeys() const   { return attributeKeys_; }
     const std::vector<std::string>& attributeValues() const { return attributeValues_; }
@@ -122,6 +158,9 @@ public:
     bool operator==(const Node &rhs) const;
 
 protected:
+    friend ParserSax;
+    friend ParserDom;
+
     std::string tagName_;
     std::string text_;
     std::string closingText_;
@@ -132,9 +171,26 @@ protected:
     std::vector<std::string> attributeValues_;
 };
 
-void Node::addAttribute(const std::string &key, const std::string &value)
+inline size_t Node::contentOffset() const
 {
-    attributeKeys_.push_back(key);
+    return !(isTag() || isRoot()) ? 0 : offset_ + text_.length();
+}
+
+inline size_t Node::contentLength() const
+{
+    return !(isTag() || isRoot()) ? 0 :
+            length_ - text_.length() - closingText_.length();
+}
+
+inline std::string Node::content(const std::string &htmlSource) const
+{
+    return !(isTag() || isRoot()) ? std::string() :
+            htmlSource.substr(contentOffset(), contentLength());
+}
+
+inline void Node::addAttribute(const std::string &key, const std::string &value)
+{
+    attributeKeys_.push_back(detail::toLower(key));
     attributeValues_.push_back(value);
 }
 
@@ -161,8 +217,12 @@ inline bool Node::operator==(const Node &node) const
 {
     if (kind_ != node.kind_)
         return false;
-    // TODO: Compare all text?
-    return detail::icompare(tagName().c_str(), node.tagName().c_str()) == 0;
+    if (isRoot() || isEnd())
+        return true;
+    if (isTag())
+        return detail::icompare(tagName().c_str(), node.tagName().c_str()) == 0;
+    else
+        return detail::icompare(text().c_str(), node.text().c_str()) == 0;
 }
 
 //
@@ -384,15 +444,8 @@ DONE:
 template <typename It>
 void ParserSax::parseComment(It begin, It pos)
 {
-    Node node;
-    //FIXME: set_tagname shouldn't be needed, but first I must check
-    //legacy code
     std::string comment(begin, pos);
-    // node.setTagName(comment); // TODO:
-    node.setText(comment);
-    node.setOffset(currentOffset_);
-    node.setLength(comment.length());
-    node.setKindComment();
+    Node node("", comment, "", currentOffset_, comment.length(), Node::NODE_COMMENT);
     currentOffset_ += node.length();
     onFoundComment(node);
 }
@@ -400,15 +453,8 @@ void ParserSax::parseComment(It begin, It pos)
 template <typename It>
 void ParserSax::parseContent(It begin, It pos)
 {
-    Node node;
-    //FIXME: set_tagname shouldn't be needed, but first I must check
-    //legacy code
     std::string text(begin, pos);
-    // node.setTagName(text); // TODO:
-    node.setText(text);
-    node.setOffset(currentOffset_);
-    node.setLength(text.length());
-    node.setKindText();
+    Node node("", text, "", currentOffset_, text.length(), Node::NODE_TEXT);
     currentOffset_ += node.length();
     onFoundText(node);
 }
@@ -440,14 +486,9 @@ void ParserSax::parseTag(It begin, It pos)
                 }
     }
 
-    Node node;
     //by now, length is just the size of the tag
     std::string text(begin, pos);
-    node.setLength(text.length());
-    node.setTagName(name);
-    node.setText(text);
-    node.setOffset(currentOffset_);
-    node.setKindTag();
+    Node node(name, text, "", currentOffset_, text.length(), Node::NODE_TAG);
     currentOffset_ += node.length();
     onFoundTag(node, isClosingTag);
 }
@@ -541,18 +582,14 @@ inline void ParserDom::onBeginParsing()
 {
     tree_.clear();
     Tree::iterator top = tree_.begin();
-    Node node;
-    node.setOffset(0);
-    node.setLength(0);
-    node.setKindTag();
-    node.setKindRoot();
+    Node node("", "", "" , 0, 0, Node::NODE_ROOT);
     currIt_ = tree_.insert(top, node);
 }
 
 inline void ParserDom::onEndParsing()
 {
     Tree::iterator top = tree_.begin();
-    top->setLength(currentOffset_);
+    top->length_ = currentOffset_;
 }
 
 inline void ParserDom::onFoundComment(Node &node)

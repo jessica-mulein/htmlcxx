@@ -47,10 +47,8 @@ size_t Node::parseAttributes()
         end = ptr;
         while (::isalnum((unsigned char)*end) || *end == '-')
             ++end;
-        key.assign(end - ptr, '\0');
-        std::transform(ptr, end, key.begin(), ::tolower);
+        key.assign(ptr, end);
         ptr = end;
-
         // skip blankspace
         while (::isspace((unsigned char)*ptr))
             ++ptr;
@@ -95,6 +93,7 @@ size_t Node::parseAttributes()
         else if (!key.empty())
             addAttribute(key);
     }
+    return attributeKeys_.size();
 }
 
 //
@@ -133,8 +132,8 @@ void ParserDom::onFoundTag(Node &node, bool isClosingTag)
                 //Closing tag closes this tag
                 //Set length to full range between the opening tag and
                 //closing tag
-                i->setLength(node.offset() + node.length() - i->offset());
-                i->setClosingText(node.text());
+                i->length_ = node.offset() + node.length() - i->offset();
+                i->closingText_ = detail::toLower(node.text());
                 // TODO: set node's content text
 
                 currIt_ = tree_.parent(i);
@@ -156,7 +155,7 @@ void ParserDom::onFoundTag(Node &node, bool isClosingTag)
         else
         {
             // Treat as comment
-            node.setKindComment();
+            node.kind_ = Node::NODE_COMMENT;
             tree_.append_child(currIt_, node);
         }
     }
