@@ -1,3 +1,10 @@
+﻿// htmlcxx2.
+// A simple non-validating parser written in C++.
+//
+// (c) 2005-2010 Davi de Castro Reis and Robson Braga Araújo
+// (c) 2011 David Hoerl
+// (c) 2017-01-24 Ruslan Zaporojets
+
 #include "htmlcxx2_html.hpp"
 
 namespace htmlcxx2 {
@@ -11,6 +18,11 @@ size_t Node::parseAttributes()
 {
     if (!isTag())
         return 0;
+
+    if (attributesParsed_)
+        return attributeKeys_.size();
+    else
+        attributesParsed_ = true;
 
     const char *end;
     const char *ptr = text_.c_str();
@@ -288,6 +300,10 @@ namespace {
     };
 
 }
+
+//
+// Utils
+//
 
 std::string decodeEntities(const std::string &str)
 {

@@ -1,3 +1,8 @@
+// htmlcxx2.
+// A simple non-validating parser written in C++.
+//
+// (c) 2017-01-24 Ruslan Zaporojets
+
 #include "stdafx.h"
 #define CATCH_CONFIG_MAIN
 #include <catch.hpp>
@@ -172,8 +177,8 @@ R"(<DIV class="main" AttR2>
     Text
 </div>)");
     ParserDom parser;
-    Tree root = parser.parseTree(html);
-    Tree::pre_order_iterator it = root.begin();
+    Tree domTree = parser.parseTree(html);
+    Tree::pre_order_iterator it = domTree.begin();
     ++it;
     REQUIRE(it->tagName() == "div");
     REQUIRE(it->parseAttributes() == 2);
@@ -197,12 +202,12 @@ R"(<div>
 <p>Text <a href="link3.html">link3</a></p>
 </div>)");
     ParserDom parser;
-    Tree root = parser.parseTree(html);
-    Tree::pre_order_iterator it = root.begin();
+    Tree domTree = parser.parseTree(html);
+    Tree::pre_order_iterator it = domTree.begin();
 
     std::vector<std::string> links;
     std::string href;
-    std::for_each(it, root.end(), [&links, &href](Node &node)
+    std::for_each(it, domTree.end(), [&links, &href](Node &node)
     {
         if (node.isTag() 
                 && (node.tagName() == "a")
@@ -215,3 +220,51 @@ R"(<div>
     REQUIRE(links[1] == "link2.html");
     REQUIRE(links[2] == "link3.html");
 }
+
+TEST_CASE("find tag")
+{
+    std::string html(
+R"(<div>
+<p>Text_1</p>
+<div>
+<span>Text</span>
+<span>Text</span>
+<p>Text2</p>
+</div>
+<div>
+<span>Text</span>
+<span>Text</span>
+<p>Text3</p>
+</div>
+</div>)");
+    ParserDom parser;
+    Tree domTree = parser.parseTree(html);
+    Tree::pre_order_iterator it = domTree.begin();
+    Tree::pre_order_iterator endIt = domTree.end();
+
+    REQUIRE((it = findTag(it, endIt, "p")) != endIt);
+    REQUIRE(it->content(html) == "Text_1");
+    ++it;
+    REQUIRE((it = findTag(it, endIt, "p")) != endIt);
+    REQUIRE(it->content(html) == "Text2");
+    ++it;
+    REQUIRE((it = findTag(it, endIt, "p")) != endIt);
+    REQUIRE(it->content(html) == "Text3");
+    ++it;
+    REQUIRE((it = findTag(it, endIt, "p")) == endIt);
+
+    it = domTree.end();
+    endIt = domTree.begin();
+    REQUIRE((it = rfindTag(it, endIt, "p")) != endIt);
+    REQUIRE(it->content(html) == "Text3");
+    --it;
+    REQUIRE((it = rfindTag(it, endIt, "p")) != endIt);
+    REQUIRE(it->content(html) == "Text2");
+    --it;
+    REQUIRE((it = rfindTag(it, endIt, "p")) != endIt);
+    REQUIRE(it->content(html) == "Text_1");
+    --it;
+    REQUIRE((it = rfindTag(it, endIt, "p")) == endIt);
+}
+
+

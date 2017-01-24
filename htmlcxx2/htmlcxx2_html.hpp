@@ -1,9 +1,16 @@
+﻿// htmlcxx2.
+// A simple non-validating parser written in C++.
+//
+// (c) 2005-2010 Davi de Castro Reis and Robson Braga Araújo
+// (c) 2011 David Hoerl
+// (c) 2017-01-24 Ruslan Zaporojets
+
 #ifndef __HTML_PARSER_DOM_H__
 #define __HTML_PARSER_DOM_H__
 
 #include <cctype>
 #include <cstring>
-#if !defined(WIN32) || defined(__MINGW32__)
+#if !(defined(WIN32) || defined(_WIN64)) || defined(__MINGW32__)
 #include <strings.h>
 #endif
 
@@ -104,7 +111,8 @@ public:
         length_(0),
         kind_(NODE_END),
         attributeKeys_(),
-        attributeValues_() { }
+        attributeValues_(),
+        attributesParsed_(false) { }
 
     Node(const std::string &tagName,
             const std::string &text,
@@ -119,7 +127,8 @@ public:
         length_(length),
         kind_(kind),
         attributeKeys_(),
-        attributeValues_() { }
+        attributeValues_(),
+        attributesParsed_(false) { }
     ~Node() { }
 
     const std::string& tagName() const     { return tagName_; }
@@ -152,14 +161,14 @@ public:
     const std::vector<std::string>& attributeValues() const { return attributeValues_; }
     bool hasAttribute(const std::string &key) const;
     bool attribute(const std::string &key, std::string &value) const;
-    void addAttribute(const std::string &key, const std::string &value = "");
-    size_t parseAttributes();
-
     bool operator==(const Node &rhs) const;
+    size_t parseAttributes();
 
 protected:
     friend ParserSax;
     friend ParserDom;
+
+    void addAttribute(const std::string &key, const std::string &value = "");
 
     std::string tagName_;
     std::string text_;
@@ -169,6 +178,7 @@ protected:
     Kind kind_;
     std::vector<std::string> attributeKeys_;
     std::vector<std::string> attributeValues_;
+    bool attributesParsed_;
 };
 
 inline size_t Node::contentOffset() const
@@ -607,6 +617,29 @@ inline void ParserDom::onFoundText(Node &node)
 //
 // Utils
 //
+
+template <typename It>
+inline It findTag(It it, It end, const std::string &tag)
+{
+    return std::find_if(it, end, [&tag](const Node &node)
+    {
+        return node.isTag()
+            && (detail::icompare(node.tagName().c_str(), tag.c_str()) == 0);
+    });
+}
+
+template <typename It>
+inline It rfindTag(It it, It rend, const std::string &tag)
+{
+    while (it != rend)
+    {
+        if (it->isTag() && (detail::icompare(
+                it->tagName().c_str(), tag.c_str()) == 0))
+            return it;
+        --it;
+    }
+    return rend;
+}
 
 std::string decodeEntities(const std::string &str);
 
