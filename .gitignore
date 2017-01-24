@@ -152,6 +152,7 @@ $RECYCLE.BIN/
 
 # MY
 *.vc.db
+*.opendb
 temp/
 lib/
 bin/
