@@ -152,7 +152,8 @@ $RECYCLE.BIN/
 
 # MY
 *.vc.db
-lib*/
-bin*/
-Debug_*/
-Release_*/
+temp/
+lib/
+bin/
+Win32/
+x64/

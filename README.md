@@ -1,6 +1,6 @@
 # About
 
-A fork of htmlcxx with Visual C++ support. Contains only html parser. The Source files taken from [github.com/dhoerl/htmlcxx](https://github.com/dhoerl/htmlcxx) that is based on [htmlcxx.sourceforge.net](http://htmlcxx.sourceforge.net/).
+A fork of htmlcxx. Contains only html parser and 3 files. The Source files taken from [github.com/dhoerl/htmlcxx](https://github.com/dhoerl/htmlcxx) that is based on [htmlcxx.sourceforge.net](http://htmlcxx.sourceforge.net/).
 
 # License
 

@@ -37,7 +37,7 @@
 #include <algorithm>
 #include <cstddef>
 
-namespace tree_hh
+namespace kp
 {
 
 /// A node in the tree, combining links to other nodes as well as the actual data.
@@ -2781,7 +2781,7 @@ typename tree<T, tree_node_allocator>::leaf_iterator& tree<T, tree_node_allocato
    return (*this);
    }
 
-}  // namespace tree_hh
+}  // namespace kasper_peeters
 
 #endif  // tree_hh_
 
