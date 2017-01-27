@@ -227,7 +227,7 @@ inline bool Node::operator==(const Node &node) const
 {
     if (kind_ != node.kind_)
         return false;
-    if ((isRoot() && node.isRoot) || (isEnd() && node.isEnd())) // TODO:
+    if ((isRoot() && node.isRoot()) || (isEnd() && node.isEnd())) // TODO:
         return true;
     if (isTag())
         return detail::icompare(tagName().c_str(), node.tagName().c_str()) == 0;
