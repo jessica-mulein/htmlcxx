@@ -1,6 +1,2 @@
 #include "stdafx.h"
-
-int main()
-{
-    return 0;
-}
+#include "..\..\test\test.cpp"
