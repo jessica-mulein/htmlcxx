@@ -377,12 +377,12 @@ class tree {
         /// Check if tree is empty.
         bool     empty() const;
         /// Compute the depth to the root or to a fixed other iterator.
-        static int depth(const iterator_base&);
-        static int depth(const iterator_base&, const iterator_base&);
+        static size_t depth(const iterator_base&);
+        static size_t depth(const iterator_base&, const iterator_base&);
         /// Determine the maximal depth of the tree. An empty tree has max_depth=-1.
-        int      max_depth() const;
+        size_t max_depth() const;
         /// Determine the maximal depth of the tree with top node at the given position.
-        int      max_depth(const iterator_base&) const;
+        size_t max_depth(const iterator_base&) const;
         /// Count the number of children of node at position.
         static size_t number_of_children(const iterator_base&);
         /// Count the number of siblings (left and right) of node at iterator. Total nodes at this level is +1.
@@ -1627,11 +1627,11 @@ bool tree<T, tree_node_allocator>::empty() const
     }
 
 template <class T, class tree_node_allocator>
-int tree<T, tree_node_allocator>::depth(const iterator_base& it) 
+size_t tree<T, tree_node_allocator>::depth(const iterator_base& it)
     {
     tree_node* pos=it.node;
     assert(pos!=0);
-    int ret=0;
+    size_t ret=0;
     while(pos->parent!=0) {
         pos=pos->parent;
         ++ret;
@@ -1640,11 +1640,11 @@ int tree<T, tree_node_allocator>::depth(const iterator_base& it)
     }
 
 template <class T, class tree_node_allocator>
-int tree<T, tree_node_allocator>::depth(const iterator_base& it, const iterator_base& root) 
+size_t tree<T, tree_node_allocator>::depth(const iterator_base& it, const iterator_base& root)
     {
     tree_node* pos=it.node;
     assert(pos!=0);
-    int ret=0;
+    size_t ret=0;
     while(pos->parent!=0 && pos!=root.node) {
         pos=pos->parent;
         ++ret;
@@ -1653,24 +1653,26 @@ int tree<T, tree_node_allocator>::depth(const iterator_base& it, const iterator_
     }
 
 template <class T, class tree_node_allocator>
-int tree<T, tree_node_allocator>::max_depth() const
+size_t tree<T, tree_node_allocator>::max_depth() const
     {
-    int maxd=-1;
-    for(tree_node *it = head->next_sibling; it!=feet; it=it->next_sibling)
-        maxd=std::max(maxd, max_depth(it));
-
+    size_t maxd=(size_t)-1;
+    for (tree_node *it = head->next_sibling; it != feet; it = it->next_sibling)
+    {
+        size_t md = max_depth(it);
+        maxd = (maxd == (size_t)-1) ? md : std::max(maxd, md);
+    }
     return maxd;
     }
 
 
 template <class T, class tree_node_allocator>
-int tree<T, tree_node_allocator>::max_depth(const iterator_base& pos) const
+size_t tree<T, tree_node_allocator>::max_depth(const iterator_base& pos) const
     {
     tree_node *tmp=pos.node;
 
     if(tmp==0 || tmp==head || tmp==feet) return -1;
 
-    int curdepth=0, maxdepth=0;
+    size_t curdepth=0, maxdepth=0;
     while(true) { // try to walk the bottom of the tree
         while(tmp->first_child==0) {
             if(tmp==pos.node) return maxdepth;
@@ -2394,7 +2396,7 @@ typename tree<T, tree_node_allocator>::fixed_depth_iterator& tree<T, tree_node_a
 		iterator_base::node=iterator_base::node->next_sibling;
         }
     else { 
-        int relative_depth=0;
+        intptr_t relative_depth=0;
        upper:
         do {
             if(iterator_base::node==top_node) {
@@ -2434,7 +2436,7 @@ typename tree<T, tree_node_allocator>::fixed_depth_iterator& tree<T, tree_node_a
 		iterator_base::node=iterator_base::node->prev_sibling;
         }
     else { 
-        int relative_depth=0;
+        intptr_t relative_depth=0;
        upper:
         do {
             if(iterator_base::node==top_node) {

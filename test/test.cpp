@@ -4,8 +4,8 @@
 // (c) 2017-01-24 Ruslan Zaporojets
 
 #define CATCH_CONFIG_MAIN
+#include <htmlcxx2/htmlcxx2_html.hpp>
 #include "catch.hpp"
-#include "..\htmlcxx2\htmlcxx2_html.cpp"
 
 using namespace htmlcxx2::HTML;
 

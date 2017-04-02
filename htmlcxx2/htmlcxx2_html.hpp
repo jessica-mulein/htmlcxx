@@ -26,15 +26,15 @@
 namespace htmlcxx2 {
 namespace HTML {
 
-namespace detail {
+namespace impl {
 
     const char LITERAL_MODE_ELEM[][11] =
     {
-        "\x06""script",
-        "\x05""style",
-        "\x03""xmp",
-        "\x09""plaintext",
-        "\x08""textarea"
+        "\x06" "script",
+        "\x05" "style",
+        "\x03" "xmp",
+        "\x09" "plaintext",
+        "\x08" "textarea"
     };
 
     template <typename It>
@@ -48,12 +48,12 @@ namespace detail {
     template <>
     inline const char* findNextQuote(const char *pos, const char *end, char quote)
     {
-        const char *found = reinterpret_cast<const char*>(memchr(pos, quote, end - pos));
+        const char *found = reinterpret_cast<const char*>(::memchr(pos, quote, end - pos));
         return found ? found : end;
     }
 
     template <class T>
-    int icompare(const T *s1, const T *s2)
+    inline int icompare(const T *s1, const T *s2)
     {
         while (*s1 && *s2)
         {
@@ -74,11 +74,12 @@ namespace detail {
     }
 
     template <typename T>
-    T toLower(const T &s)
+    inline T toLower(const T &s)
     {
         T ret;
-        std::transform(s.begin(), s.end(),
-                std::back_insert_iterator<std::string>(ret), ::tolower);
+        ret.reserve(s.size());
+        for (const auto ch : s)
+            ret.push_back(static_cast<decltype(ch)>(::tolower(ch)));
         return ret;
     }
 
@@ -120,9 +121,9 @@ public:
             size_t offset,
             size_t length,
             Kind kind) :
-        tagName_(detail::toLower(tagName)),
+        tagName_(impl::toLower(tagName)),
         text_(text),
-        closingText_(detail::toLower(closingText)),
+        closingText_(impl::toLower(closingText)),
         offset_(offset),
         length_(length),
         kind_(kind),
@@ -200,14 +201,14 @@ inline std::string Node::content(const std::string &htmlSource) const
 
 inline void Node::addAttribute(const std::string &key, const std::string &value)
 {
-    attributeKeys_.push_back(detail::toLower(key));
+    attributeKeys_.push_back(impl::toLower(key));
     attributeValues_.push_back(value);
 }
 
 inline bool Node::hasAttribute(const std::string &key) const
 {
     for (size_t i = 0, l = attributeKeys_.size(); i < l; ++i)
-        if (detail::icompare(attributeKeys_[i].c_str(), key.c_str()) == 0)
+        if (impl::icompare(attributeKeys_[i].c_str(), key.c_str()) == 0)
             return true;
     return false;
 }
@@ -215,7 +216,7 @@ inline bool Node::hasAttribute(const std::string &key) const
 inline bool Node::attribute(const std::string &key, std::string &value) const
 {
     for (size_t i = 0, l = attributeKeys_.size(); i < l; ++i)
-        if (detail::icompare(attributeKeys_[i].c_str(), key.c_str()) == 0)
+        if (impl::icompare(attributeKeys_[i].c_str(), key.c_str()) == 0)
         {
             value = attributeValues_[i];
             return true;
@@ -230,9 +231,103 @@ inline bool Node::operator==(const Node &node) const
     if ((isRoot() && node.isRoot()) || (isEnd() && node.isEnd())) // TODO:
         return true;
     if (isTag())
-        return detail::icompare(tagName().c_str(), node.tagName().c_str()) == 0;
+        return impl::icompare(tagName().c_str(), node.tagName().c_str()) == 0;
     else
-        return detail::icompare(text().c_str(), node.text().c_str()) == 0;
+        return impl::icompare(text().c_str(), node.text().c_str()) == 0;
+}
+
+inline size_t Node::parseAttributes()
+{
+    if (!isTag())
+        return 0;
+
+    if (attributesParsed_)
+        return attributeKeys_.size();
+    else
+        attributesParsed_ = true;
+
+    const char *end;
+    const char *ptr = text_.c_str();
+    if ((ptr = strchr(ptr, '<')) == 0)
+        return 0;
+    ++ptr;
+
+    // Skip initial blankspace
+    while (::isspace((unsigned char)*ptr))
+        ++ptr;
+
+    // Skip tagname
+    if (!::isalpha((unsigned char)*ptr))
+        return 0;
+    while (!::isspace((unsigned char)*ptr) && *ptr != '>')
+        ++ptr;
+
+    // Skip blankspace after tagname
+    while (::isspace((unsigned char)*ptr))
+        ++ptr;
+
+    while (*ptr && *ptr != '>')
+    {
+        std::string key, val;
+
+        // skip unrecognized
+        while (*ptr && !::isalnum((unsigned char)*ptr) && !::isspace((unsigned char)*ptr))
+            ++ptr;
+
+        // skip blankspace
+        while (::isspace((unsigned char)*ptr))
+            ++ptr;
+
+        end = ptr;
+        while (::isalnum((unsigned char)*end) || *end == '-')
+            ++end;
+        key.assign(ptr, end);
+        ptr = end;
+        // skip blankspace
+        while (::isspace((unsigned char)*ptr))
+            ++ptr;
+
+        if (*ptr == '=')
+        {
+            ++ptr;
+            while (::isspace((unsigned char)*ptr))
+                ++ptr;
+            if (*ptr == '"' || *ptr == '\'')
+            {
+                char quote = *ptr;
+                end = strchr(ptr + 1, quote);
+                if (end == 0)
+                {
+                    const char *end1, *end2;
+                    end1 = strchr(ptr + 1, ' ');
+                    end2 = strchr(ptr + 1, '>');
+                    end = end1 && (end1 < end2) ? end1 : end2;
+                    if (end == 0)
+                        return attributeKeys_.size();
+                }
+                const char *begin = ptr + 1;
+                while (::isspace((unsigned char)*begin) && begin < end)
+                    ++begin;
+                const char *trimmed_end = end - 1;
+                while (::isspace((unsigned char)*trimmed_end) && trimmed_end >= begin)
+                    --trimmed_end;
+                val.assign(begin, trimmed_end + 1);
+                ptr = end + 1;
+            }
+            else
+            {
+                end = ptr;
+                while (*end && !::isspace((unsigned char)*end) && *end != '>')
+                    end++;
+                val.assign(ptr, end);
+                ptr = end;
+            }
+            addAttribute(key, val);
+        }
+        else if (!key.empty())
+            addAttribute(key);
+    }
+    return attributeKeys_.size();
 }
 
 //
@@ -484,14 +579,14 @@ void ParserSax::parseTag(It begin, It pos)
 
     if (!isClosingTag)
     {
-        const size_t arrCount = sizeof(detail::LITERAL_MODE_ELEM) /
-                sizeof(detail::LITERAL_MODE_ELEM[0]);
+        const size_t arrCount = sizeof(impl::LITERAL_MODE_ELEM) /
+                sizeof(impl::LITERAL_MODE_ELEM[0]);
         const size_t tagLen = name.length();
-        for (int i = 0; i < arrCount; ++i)
-            if ((tagLen == static_cast<size_t>(detail::LITERAL_MODE_ELEM[i][0]))
-                    && (detail::icompare(name.c_str(), &detail::LITERAL_MODE_ELEM[i][1]) == 0))
+        for (size_t i = 0; i < arrCount; ++i)
+            if ((tagLen == static_cast<size_t>(impl::LITERAL_MODE_ELEM[i][0]))
+                    && (impl::icompare(name.c_str(), &impl::LITERAL_MODE_ELEM[i][1]) == 0))
                 {
-                    literal_ = &detail::LITERAL_MODE_ELEM[i][1];
+                    literal_ = &impl::LITERAL_MODE_ELEM[i][1];
                     break;
                 }
     }
@@ -540,7 +635,7 @@ It ParserSax::skipTag(It pos, It end)
             {
                 It save(pos);
                 char quote = *pos++;
-                pos = detail::findNextQuote(pos, end, quote);
+                pos = impl::findNextQuote(pos, end, quote);
                 if (pos != end)
                     ++pos;
                 else
@@ -614,6 +709,67 @@ inline void ParserDom::onFoundText(Node &node)
     tree_.append_child(currIt_, node);
 }
 
+inline void ParserDom::onFoundTag(Node &node, bool isClosingTag)
+{
+    if (!isClosingTag)
+    {
+        //append to current tree node
+        Tree::iterator nextIt;
+        nextIt = tree_.append_child(currIt_, node);
+        currIt_ = nextIt;
+    }
+    else
+    {
+        //Look if there is a pending open tag with that same name upwards
+        //If currIt_ tag isn't matching tag, maybe a some of its parents
+        // matches
+        std::vector<Tree::iterator> path;
+        Tree::iterator i = currIt_;
+        bool foundOpenTag = false;
+        while (i != tree_.begin())
+        {
+            assert(i->isTag());
+            assert(i->tagName().length());
+
+            bool equal;
+            const char *open = i->tagName().c_str();
+            const char *close = node.tagName().c_str();
+            equal = impl::icompare(open, close) == 0;
+
+            if (equal)
+            {
+                //Closing tag closes this tag
+                //Set length to full range between the opening tag and
+                //closing tag
+                i->length_ = node.offset() + node.length() - i->offset();
+                i->closingText_ = impl::toLower(node.text());
+                // TODO: set node's content text
+
+                currIt_ = tree_.parent(i);
+                foundOpenTag = true;
+                break;
+            }
+            else
+                path.push_back(i);
+            i = tree_.parent(i);
+        }
+
+        if (foundOpenTag)
+        {
+            //If match was upper in the tree, so we need to invalidate child
+            //nodes that were waiting for a close
+            for (size_t j = 0; j < path.size(); ++j)
+                tree_.flatten(path[j]);
+        }
+        else
+        {
+            // Treat as comment
+            node.kind_ = Node::NODE_COMMENT;
+            tree_.append_child(currIt_, node);
+        }
+    }
+}
+
 //
 // Utils
 //
@@ -624,7 +780,7 @@ inline It findTag(It it, It end, const std::string &tag)
     return std::find_if(it, end, [&tag](const Node &node)
     {
         return node.isTag()
-            && (detail::icompare(node.tagName().c_str(), tag.c_str()) == 0);
+            && (impl::icompare(node.tagName().c_str(), tag.c_str()) == 0);
     });
 }
 
@@ -633,19 +789,13 @@ inline It rfindTag(It it, It rend, const std::string &tag)
 {
     while (it != rend)
     {
-        if (it->isTag() && (detail::icompare(
-                it->tagName().c_str(), tag.c_str()) == 0))
+        if (it->isTag()
+                && (impl::icompare(it->tagName().c_str(), tag.c_str()) == 0))
             return it;
         --it;
     }
     return rend;
 }
-
-std::string decodeEntities(const std::string &str);
-
-#ifdef _DEBUG
-std::ostream& operator<<(std::ostream &stream, const Tree &tr);
-#endif
 
 } }
 
