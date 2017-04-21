@@ -1,6 +1,6 @@
 # About
 
-A fork of htmlcxx. Contains only html parser and 3 files.
+Header only fork of htmlcxx. Contains only html parser.
 For examples see \test\test.cpp
 
 # License
