@@ -189,14 +189,12 @@ inline size_t Node::contentOffset() const
 
 inline size_t Node::contentLength() const
 {
-    return !(isTag() || isRoot()) ? 0 :
-            length_ - text_.length() - closingText_.length();
+    return !(isTag() || isRoot()) ? 0 : length_ - text_.length() - closingText_.length();
 }
 
 inline std::string Node::content(const std::string &htmlSource) const
 {
-    return !(isTag() || isRoot()) ? std::string() :
-            htmlSource.substr(contentOffset(), contentLength());
+    return !(isTag() || isRoot()) ? std::string() : htmlSource.substr(contentOffset(), contentLength());
 }
 
 inline void Node::addAttribute(const std::string &key, const std::string &value)
@@ -208,19 +206,23 @@ inline void Node::addAttribute(const std::string &key, const std::string &value)
 inline bool Node::hasAttribute(const std::string &key) const
 {
     for (size_t i = 0, l = attributeKeys_.size(); i < l; ++i)
+    {
         if (impl::icompare(attributeKeys_[i].c_str(), key.c_str()) == 0)
             return true;
+    }
     return false;
 }
 
 inline bool Node::attribute(const std::string &key, std::string &value) const
 {
     for (size_t i = 0, l = attributeKeys_.size(); i < l; ++i)
+    {
         if (impl::icompare(attributeKeys_[i].c_str(), key.c_str()) == 0)
         {
             value = attributeValues_[i];
             return true;
         }
+    }
     return false;
 }
 
@@ -660,7 +662,7 @@ typedef kp::tree<Node> Tree;
 class ParserDom : public ParserSax
 {
 public:
-    ParserDom() {}
+    ParserDom() : tree_(), currIt_() {}
     ~ParserDom() {}
 
     const Tree& parseTree(const std::string &html);
@@ -686,9 +688,8 @@ inline const Tree& ParserDom::parseTree(const std::string &html)
 inline void ParserDom::onBeginParsing()
 {
     tree_.clear();
-    Tree::iterator top = tree_.begin();
     Node node("", "", "" , 0, 0, Node::NODE_ROOT);
-    currIt_ = tree_.insert(top, node);
+    currIt_ = tree_.insert(tree_.begin(), node);
 }
 
 inline void ParserDom::onEndParsing()
@@ -714,9 +715,7 @@ inline void ParserDom::onFoundTag(Node &node, bool isClosingTag)
     if (!isClosingTag)
     {
         //append to current tree node
-        Tree::iterator nextIt;
-        nextIt = tree_.append_child(currIt_, node);
-        currIt_ = nextIt;
+        currIt_ = tree_.append_child(currIt_, node);
     }
     else
     {
