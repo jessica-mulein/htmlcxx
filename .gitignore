@@ -160,3 +160,4 @@ bin/
 Win32/
 x64/
 cmake-build-debug/
+.idea/

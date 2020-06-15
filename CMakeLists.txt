@@ -56,4 +56,4 @@ if((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR MODERN_CMAKE_BUILD_TESTING) AND 
 endif()
 
 add_library(htmlcxx2 INTERFACE)
-target_include_directories(htmlcxx2 INTERFACE ${HTMLCXX2_INCLUDE_ROOT})
+target_include_directories(htmlcxx2 INTERFACE ${HTMLCXX2_INCLUDE_ROOT}/)
